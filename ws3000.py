@@ -111,7 +111,7 @@ current data (27 bytes)
 17 ff ch8 temp LSB
 18 ff ch8 hum
 19 40
-1a 7dweewx.drivers.WS3000
+1a 7d
 
 Change log:
 
@@ -140,7 +140,7 @@ import usb
 import weewx.drivers
 import weewx.wxformulas
 
-DRIVER_NAME = 'WS3000'weewx.drivers.WS3000
+DRIVER_NAME = 'WS3000'
 DRIVER_VERSION = "0.2"
 
 
@@ -179,7 +179,9 @@ class WS3000(weewx.drivers.AbstractDevice):
     """Driver for the WS3000 station."""
 
     DEFAULT_MAP = {
-        'extraTemp1': 't_1',weewx.drivers.WS3000
+        'inTemp': 't_8',
+        'outTemp': 't_5',
+        'extraTemp1': 't_1',
         'extraTemp2': 't_2',
         'extraTemp3': 't_3',
         'extraTemp4': 't_4',
@@ -187,6 +189,8 @@ class WS3000(weewx.drivers.AbstractDevice):
         'extraTemp6': 't_6',
         'extraTemp7': 't_7',
         'extraTemp8': 't_8',
+        'inHumidity': 'h_8',
+        'outHumidity': 'h_5',
         'extraHumid1': 'h_1',
         'extraHumid2': 'h_2',
         'extraHumid3': 'h_3',
@@ -344,7 +348,7 @@ class WS3000(weewx.drivers.AbstractDevice):
         # The following is normally not required... could be removed?
         try:
             usb.util.claim_interface(self.device, self.interface)
-        except usb.USBError, e:
+        except(usb.USBError, e):
             self.closePort()
             logerr("Unable to claim USB interface: %s" % e)
             raise weewx.WeeWxIOError(e)
@@ -460,7 +464,12 @@ class WS3000(weewx.drivers.AbstractDevice):
     # ==========================================================================
 
     def _get_cmd_name(self, hex_command):
-        return self.COMMANDS.keys()[self.COMMANDS.values().index(hex_command)]
+        for item in self.COMMANDS.items():
+            if item[1] == hex_command:
+                return item[0]
+        return f"unrecognized command {hex_command:x}"
+        # this should work but it doesn't
+        # return self.COMMANDS.keys()[self.COMMANDS.values().index(hex_command)]
 
     def _get_raw_data(self, hex_command=COMMANDS['sensor_values']):
         """Get a sequence of bytes from the console."""
@@ -571,8 +580,8 @@ class WS3000ConfEditor(weewx.drivers.AbstractConfEditor):
 """
 
     def modify_config(self, config_dict):
-        print """
-Changing the schema to include extraTemp and extraHumid colums """
+        print( """
+Changing the schema to include extraTemp and extraHumid colums """)
         config_dict['DataBindings']['wx_binding']['schema'] = 'user.ws3000Extensions.ws3000Schema'
 
 
@@ -602,7 +611,7 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     if options.version:
-        print "driver version %s" % DRIVER_VERSION
+        print("driver version %s" % DRIVER_VERSION)
         exit(1)
 
     if options.debug:
@@ -612,7 +621,7 @@ if __name__ == '__main__':
         driver = WS3000()
         try:
             for p in driver.genLoopPackets():
-                print p
+                print(p)
         finally:
             driver.closePort()
     else:
