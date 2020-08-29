@@ -9,23 +9,8 @@
     <h1 class="page_title">$station.location</h1>
     <p class="lastupdate">$current.dateTime</p>
   </div>
-  <div id="rss_link"><a href="rss.xml">RSS</a></div>
-  <div id="reports">
-    Monthly Reports:
-    <select name="reports" onchange="openTabularFile(value)">
-      #for $monthYear in $SummaryByMonth
-      <option value="$monthYear">$monthYear</option>
-      #end for
-      <option selected>- Select Month -</option>
-    </select>
-    <br/>
-    Yearly Reports:
-    <select name="reports" onchange="openTabularFile(value)">
-      #for $yr in $SummaryByYear
-      <option value="$yr">$yr</option>
-      #end for
-      <option selected>- Select Year -</option>
-    </select>
-    <br/>
+  <div id="contents">
+    <h1 class="page_title"><a href="https://forecast.weather.gov/MapClick.php?lat=41.548560&lon=-70.598845">Local Forecast</a></h1>
+    ##<h1 class="page_title"><a href=$station.local_forecast>Local Forecast</a></h1>
   </div>
 </div>
