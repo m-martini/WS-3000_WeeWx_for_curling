@@ -1,9 +1,9 @@
 # WS-3000 WeeWx driver
 
 updated for use at the Cape Cod Curling Club by Marinna Martini
-- corrected random text 'weewx.drivers.WS3000' in the driver that prevented it from running
-- corrected syntax errors
-- added a skin for curling club montoring (currently in beta as I test at home)
+* corrected random text 'weewx.drivers.WS3000' in the driver that prevented it from running
+* corrected syntax errors
+* added a skin for curling club montoring (currently in beta as I test at home)
 
 ## Description
 
